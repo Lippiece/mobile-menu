@@ -2425,7 +2425,6 @@ const mainColor             = (0,_emotion_css__WEBPACK_IMPORTED_MODULE_0__.css)(
 	} ),
 	content = document.querySelector( "#content" );
 
-initializeMobileMenu( content );
 function addButtonLogic( mobileMenu )
 {
 	const open = (0,_emotion_css__WEBPACK_IMPORTED_MODULE_0__.css)( { visibility: "initial" } ),

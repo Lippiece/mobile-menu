@@ -40,7 +40,6 @@ const mainColor             = css( { color: "hsla(15, 100%, 60%, 0.7)" } ),
 	} ),
 	content = document.querySelector( "#content" );
 
-initializeMobileMenu( content );
 function addButtonLogic( mobileMenu )
 {
 	const open = css( { visibility: "initial" } ),
