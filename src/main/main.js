@@ -58,7 +58,6 @@ const _body                 = document.querySelector( "body" )
 	} ),
 	content = document.querySelector( "#content" );
 
-initializeMobileMenu( content );
 function addButtonLogic( mobileMenu )
 {
 	const open = css( { visibility: "initial" } ),
