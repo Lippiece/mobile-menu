@@ -18,9 +18,9 @@ Element.prototype.addStyles = function( styles )
 
 	return this;
 };
-const mainColor             = css( { color: "hsla(15, 100%, 60%, 0.7)" } ),
-	_body = document.querySelector( "body" )
+const _body                 = document.querySelector( "body" )
 		.addStyles( css( {
+			"--mainColor"  : "hsla(15, 100%, 60%, 0.7)",
 			backgroundColor: "#222",
 			height         : "100vh",
 			width          : "100vw",
@@ -28,18 +28,37 @@ const mainColor             = css( { color: "hsla(15, 100%, 60%, 0.7)" } ),
 			flexDirection  : "column",
 			justifyContent : "center",
 			alignItems     : "center",
-			color          : mainColor,
+			color          : "var( --mainColor )",
 			"&>*"          : { margin: "0.5em" },
 		} ) ),
-	mainBackgroundColor = "hsla(15, 100%, 60%, 0.7)",
-	centerFlex = css( {
-		display       : "flex",
-		flexDirection : "row",
-		justifyContent: "center",
-		alignItems    : "center",
+	dropdownContentStyle = css( {
+		display      : "flex",
+		flexDirection: "column-reverse",
+		width        : "100%",
+		overflow     : "auto",
+
+		"&>li": {
+			listStyleType: "none",
+			padding      : "0.5em",
+			color        : "white",
+			fontSize     : "1.5em",
+
+			"&>button": {
+				border    : "none",
+				outline   : "none",
+				background: "none",
+				color     : "white",
+				fontSize  : "1.5em",
+				width     : "100%",
+				cursor    : "pointer",
+				"&:hover" : { filter: "drop-shadow(0 0 0.2em var(--mainColor))" },
+				"&:focus" : { outline: "none" },
+			},
+		},
 	} ),
 	content = document.querySelector( "#content" );
 
+initializeMobileMenu( content );
 function addButtonLogic( mobileMenu )
 {
 	const open = css( { visibility: "initial" } ),
@@ -47,7 +66,7 @@ function addButtonLogic( mobileMenu )
 		dropdownContent = mobileMenu.querySelector( "#dropdownContent" );
 
 	dropdownContent.classList.add( closed, open );
-	mobileMenu.querySelector( "#menu1" )
+	mobileMenu.querySelector( "#floating-button" )
 		.addEventListener( "click", () =>
 		{ dropdownContent.classList.toggle( closed ) } );
 	mobileMenu.addEventListener( "mouseleave", () =>
@@ -56,80 +75,71 @@ function addButtonLogic( mobileMenu )
 		{ dropdownContent.classList.toggle( closed ) }
 	} );
 }
-function initializeMenuItems( parent )
+function initializeMenuItem( parent )
 {
 	const menuItemsStyle = css( {
-		backgroundColor: "hsla(15, 100%, 60%, 0.5)",
-		border         : "none",
-		color          : "white",
-		fontSize       : "1.5em",
-		padding        : "0.5em",
-		width          : "100%",
-		cursor         : "pointer",
-		"&:hover"      : { boxShadow: "0px 0px 0.5em rgba(0, 0, 0, 1)" },
-		"&:focus"      : { outline: "none" },
-	} );
-
-	for ( const name of [ "Menu 1", "Menu 2", "Menu 3" ] )
-	{
-		const menuItem = document.createElement( "button" )
+			border    : "none",
+			outline   : "none",
+			background: "none",
+			color     : "white",
+			fontSize  : "3em",
+			width     : "100%",
+			cursor    : "pointer",
+			"&:hover" : { filter: "drop-shadow(0 0 0.2em var(--mainColor))" },
+			"&:focus" : { outline: "none" },
+		} ),
+	 floatingButton = document.createElement( "button" )
 			.addStyles( menuItemsStyle )
-			// add id "menu + name index"
-			.addId( `menu${ name.split( " " )[ 1 ] }` )
-			.appendTo( parent );
+			.addId( "floating-button" )
+			.appendTo( parent ),
+		icon = document.createElement( "span" )
+			.addStyles( "iconify" )
+			.addId( "floating-button-icon" )
+			.appendTo( floatingButton );
 
-		menuItem.textContent = name;
-	}
+	icon.dataset.icon = "file-icons:actionscript";
 }
 function initializeDropdownContent( parent )
 {
-	const dropdownContentStyle = css( {
-			position       : "absolute",
-			backgroundColor: "#111",
-			width          : "100%",
-			top            : "100%",
-			overflow       : "auto",
-			boxShadow      : "0 0 10px rgba(0, 0, 0, 0.5)",
-			"&>li"         : {
-				listStyleType: "none",
-				padding      : "0.5em",
-				color        : "white",
-				fontSize     : "1.5em",
-				"&:hover"    : {
-					boxShadow      : "0px 0px 10px rgba(0, 0, 0, 1)",
-					backgroundColor: mainBackgroundColor,
-				 },
-			},
-		}, centerFlex ),
-		dropdownContent = document.createElement( "ul" )
-			.addStyles( dropdownContentStyle )
-			.addId( "dropdownContent" )
-			.appendTo( parent );
+	const dropdownContent = document.createElement( "ul" )
+		.addStyles( dropdownContentStyle )
+		.addId( "dropdownContent" )
+		.appendTo( parent );
 
 	initializeDropdownItems( dropdownContent );
 
 }
 function initializeDropdownItems( parent )
 {
-	for ( const name of [ "Item 1", "Item 2", "Item 3" ] )
+	for ( let index = 0; index < 3; index++ )
 	{
 		const item = document.createElement( "li" )
-			.appendTo( parent );
+				.appendTo( parent )
+				.addId( `dropdown-item-${ index+1 }` ),
+			button = document.createElement( "button" )
+				.appendTo( item ),
+			icon = document.createElement( "span" )
+				.addStyles( "iconify" )
+				.appendTo( button );
 
-		item.textContent = name;
+		icon.dataset.icon = "file-icons:actionscript";
+		item.title        = `Item ${ index+1 }`;
 	}
 }
 export default function initializeMobileMenu( parent )
 {
 	const mobileMenuStyle = css( {
-			position: "relative",
-			width   : "fit-content",
-		}, centerFlex ),
+			width         : "fit-content",
+			display       : "flex",
+			flexDirection : "column-reverse",
+			justifyContent: "center",
+			alignItems    : "center",
+		} ),
 		mobileMenu = document.createElement( "div" )
 			.addStyles( mobileMenuStyle )
 			.addId( "mobile-menu" );
 
-	initializeMenuItems( mobileMenu );
+	initializeMenuItem( mobileMenu );
 	initializeDropdownContent( mobileMenu );
 	addButtonLogic( mobileMenu );
 	parent.append( mobileMenu );

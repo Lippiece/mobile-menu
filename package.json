@@ -1,7 +1,7 @@
 {
 	"name": "@adipiscing/mobile-menu",
 	"type": "module",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"scripts": {
 		"setup": "mkdir src dist && cd src && mkdir main && cd main && touch main.js && cd ../.. && touch webpack.config.js .gitignore && npm i -D webpack webpack-cli webpack-dev-server html-webpack-plugin style-loader css-loader @emotion/css",
 		"build": "webpack --watch",
